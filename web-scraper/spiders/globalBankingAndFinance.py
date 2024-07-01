@@ -1,6 +1,5 @@
 import scrapy
 
-
 class GlobalbankingandfinanceSpider(scrapy.Spider):
     name = "globalBankingAndFinance"
     allowed_domains = ["www.globalbankingandfinance.com"]
@@ -13,14 +12,15 @@ class GlobalbankingandfinanceSpider(scrapy.Spider):
         for articleLink in articles:
             yield response.follow(articleLink, self.parse_article)
 
-        if currentPage < availableLink[len(availableLink) - 1]:
-            nextPageNumber = availableLink[len(availableLink) - 1]
-            yield response.follow(
-                "https://www.globalbankingandfinance.com/page/"
-                + nextPageNumber
-                + "/?s=FPT+software",
-                self.parse,
-            )
+        try:
+            if int(currentPage) < int(availableLink[len(availableLink) - 1]):
+                nextPageNumber = int(currentPage) + 1
+                yield response.follow(
+                    f"https://www.globalbankingandfinance.com/page/{nextPageNumber}/?s=FPT+software",
+                    self.parse,
+                )
+        except Exception as error:
+            print("An exception occured:", error)
 
     def parse_article(self, response):
         contentsTag = response.css("#mvp-content-main p")
