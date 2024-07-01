@@ -30,9 +30,9 @@ class VnexpressSpider(scrapy.Spider):
         try:
             while button := page.locator("#vnexpress_folder_load_more"):
                 await button.click()
+                await page.wait_for_timeout(1000)
         except:
             pass
-            print("failedddddddddd")
 
         content = await page.content()
         sel = Selector(text=content)
