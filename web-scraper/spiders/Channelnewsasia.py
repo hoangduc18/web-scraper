@@ -2,14 +2,14 @@ import scrapy
 from scrapy.selector import Selector
 
 
-class FinancialpostSpider(scrapy.Spider):
-    name = "financialPost"
-    allowed_domains = ["financialpost.com"]
-    start_urls = ["https://financialpost.com/"]
+class ChannelnewsasiaSpider(scrapy.Spider):
+    name = "Channelnewsasia"
+    allowed_domains = ["www.channelnewsasia.com"]
+    start_urls = ["https://www.channelnewsasia.com/"]
 
     def start_requests(self):
         yield scrapy.Request(
-            url="https://www.financialpost.com/search/?q=FPT+Sofware",
+            url="https://www.channelnewsasia.com/search?q=FPT+sofware",
             meta=dict(
                 playwright = True,
                 playwright_include_page = True,  
@@ -27,8 +27,8 @@ class FinancialpostSpider(scrapy.Spider):
             print("An exception occured ", error)
         sel = Selector(text=content)
         yield{
-            "title" : sel.css(".article-card__headline-clamp::text").get(),
-            # "url": sel.css("h6 a::attr(href)").get()
+            "title" : sel.css("h6 a::text").get(),
+            "url": sel.css("h6 a::attr(href)").get()
         }
 
     async def errback(self, failure):
